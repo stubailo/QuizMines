@@ -21,8 +21,8 @@ def checkAlive():
 	while (True):
 		time.sleep(2)
 		for (key, value) in last_ping.items():
-			print time.clock()-value
-			if (time.clock() - value) > 10 :
+			print time.time()-value
+			if (time.time() - value) > 10 :
 				(bear, index, msg) = ips.get(key)
 				bears.append((index, bear))			
 				del ips[key]
@@ -95,10 +95,9 @@ def mine_server():
 	global count
 	new_ip = request.access_route[0]
 	if new_ip not in ips :
-		(index, nbear) = bears.pop()
+		(index, nbear) = bears.pop(0)
 		ips[new_ip] = (nbear, index, [])
-	
-	last_ping[new_ip] = time.clock()
+	last_ping[new_ip] = time.time()
 	if request.args.has_key('message') :
 		(owner, index, msg) = ips.get(new_ip)
 		new_msg = (owner, request.args.get('message'))
