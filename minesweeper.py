@@ -108,7 +108,7 @@ def mine_server():
 		new_msg = (owner, request.args.get('message'))
 		for (bear, index, msg) in ips.values():
 			msg.append(new_msg)
-	if turn == index and request.args.has_key('x') and not hitMine :
+	if request.args.has_key('x') and not hitMine :
 		x = int(request.args.get('x'))
 		y = int(request.args.get('y'))
 		if inBound(x, y):
