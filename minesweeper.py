@@ -135,6 +135,9 @@ def mine_server():
 					hitMine = True
 					playerMap[x][y] = -1
 					response["question"] = "Who is the first hedgehog?"
+					mines_found -= 1
+					if mines_found == 0:
+						resposne['win'] = "true"
 				else :
 					expand(x,y)
 	if request.args.has_key('answer') and hitMine:
