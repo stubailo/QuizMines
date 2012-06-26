@@ -58,12 +58,12 @@ def compute_state(x,y):
 			if mines == 0 :
 				compute_state(x-1, y)
 				compute_state(x, y-1)
-				compute_state(x-1, y-1)
+				#compute_state(x-1, y-1)
 				compute_state(x+1, y)
 				compute_state(x, y+1)
-				compute_state(x+1, y+1)
-				compute_state(x-1, y+1)
-				compute_state(x+1, y-1)
+				#compute_state(x+1, y+1)
+				#compute_state(x-1, y+1)
+				#compute_state(x+1, y-1)
 			return mines
 def expand(x,y):
 	mines = compute_mine(x,y)
@@ -83,9 +83,9 @@ def mine_server():
 		ips[new_ip] = (bears.pop(), [])
 	if request.args.has_key('message') :
 		(owner, msg) = ips.get(new_ip)
-		print "here"
+		new_msg = owner + " says: " + request.args.get('message')
 		for (bear, msg) in ips.values():
-			msg.append(owner, " says: " , request.args.get('msg'))
+			msg.append(new_msg)
 	if request.args.has_key('x') and not hitMine :
 		x = int(request.args.get('x'))
 		y = int(request.args.get('y'))
@@ -107,6 +107,7 @@ def mine_server():
 			hitMine = False
 			del response['question']
 	(new_bear, msg) = ips.get(new_ip)
+	print msg
 	response['messages'] = msg
 	ips[new_ip] = (new_bear, [])
 	response['connected'] = ips.keys()
