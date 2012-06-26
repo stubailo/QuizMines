@@ -87,21 +87,27 @@ def mine_server():
 		msg = []
 		for ip in ips.keys() :
 			if ip != new_ip:
-				msg.append(ip, " has joined")
+				msg.append("Minesweeper: ", ip, " has joined")
 				old = ips.get(ip)
-				old.append(new_ip, " has joined")
+				old.append("Minesweeper: ", new_ip, " has joined")
 		ips[new_ip] = msg
 	if request.args.has_key('x') and not hitMine :
 		x = int(request.args.get('x'))
 		y = int(request.args.get('y'))
-		if inBound(x, y) and playerMap[x][y] == None:
-			if gameMap[x][y] == -1:
-				hitMine = True
-				mine_x = x
-				mine_y = y
-				response["question"] = "Who is the first hedgehog?"
-			else :
-				expand(x,y)
+		if inBound(x, y):
+			if request.args.has_key('flag'):
+				if playerMap[x][y] == None :
+					playerMap[x][y] = -2
+				elif playerMap[x][y] == -2:
+					playerMap[x][y] = None
+			elif playerMap[x][y] == None:
+				if gameMap[x][y] == -1:
+					hitMine = True
+					mine_x = x
+					mine_y = y
+					response["question"] = "Who is the first hedgehog?"
+				else :
+					expand(x,y)
 	if request.args.has_key('answer') and hitMine:
 		if request.args.get('answer') == "andrew" :
 			hitMine = False
@@ -109,7 +115,7 @@ def mine_server():
 			del response['question']
 	msg = ips.get(new_ip)
 	ips[new_ip] = []
-	response['message'] = msg
+	response['messages'] = msg
 	rep = make_response(json.dumps(response))
 	rep.headers['Access-Control-Allow-Origin'] = "*"
 	return rep
