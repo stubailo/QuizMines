@@ -44,7 +44,7 @@ def create_game():
 		while(not planted):
 			x = randint(0,9)
 			y = randint(0,9)
-			if (gameMap[x][y] != 1) :
+			if (gameMap[x][y] != -1) :
 				gameMap[x][y] = -1
 				planted = True
 	return map

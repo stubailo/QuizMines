@@ -26,8 +26,15 @@ question_time = (question) ->
       success: update
     return false
 
+win = ->
+  $("#win").show()
+
 update_view = (data) ->
   data = $.parseJSON data
+
+  if data.win
+    win()
+
   if data.question
     question_time(data.question)
   else
