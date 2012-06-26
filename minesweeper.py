@@ -92,7 +92,8 @@ def expand(x,y):
 
 def checkWin():
 	global mines_found
-	if mines_found == 0:
+	global hitMine
+	if mines_found == 0 and hitMine == False:
 		for i in range(0, WIDTH) :
 			for j in range(0, HEIGHT):
 				if playerMap[i][j] == None :
@@ -100,70 +101,74 @@ def checkWin():
 		print "win!"
 		return True
 	return False 	
+
+def mine_logic(x, y) :
+	global response
+	global turn
+	global mines_found
+	global hitMine
+	global count
+	if inBound(x, y):
+		if request.args.has_key('flag'):
+			if playerMap[x][y] == None :
+				turn = turn + 1 % 5
+				playerMap[x][y] = -2
+				if gameMap[x][y] == -1 :
+					mines_found -= 1
+				else :
+					mines_found += 1
+			elif playerMap[x][y] == -2:
+				turn = turn + 1 % 5	
+				playerMap[x][y] = None
+				if gameMap[x][y] == -1: 
+					mines_found += 1
+				else :
+					mines_found -= 1
+		elif playerMap[x][y] == None:
+			turn = turn + 1 % 5
+			if gameMap[x][y] == -1:
+				hitMine = True
+				playerMap[x][y] = -1
+				response["question"] = "Who is the first hedgehog?"
+				mines_found -= 1
+			else :
+				expand(x,y)
+
+def handle_connected(new_bear, new_index, new_ip) :
+	global response
+	connected_list = []
+	for (key, (bear, index, msg)) in ips.items() :
+		connected_list.append((bear, index, key))
+	response['connected'] = connected_list
+	response['player'] = (new_bear, new_index, new_ip)
 	
 @app.route('/', methods=['POST', 'GET'])
 def mine_server():
-	global hitMine
 	global bears
-	global count
-	global mines_found
-	global turn
+	global hitMine
 	new_ip = request.access_route[0]
 	if new_ip not in ips :
 		(index, nbear) = bears.pop(0)
 		ips[new_ip] = (nbear, index, [])
 	last_ping[new_ip] = time.time()
-	(new_bear, index, msg) = ips.get(new_ip)
+	(new_bear, new_index, msg) = ips.get(new_ip)
 	if request.args.has_key('message') :
-		(owner, index, msg) = ips.get(new_ip)
-		new_msg = (owner, request.args.get('message'))
-		for (bear, index, msg) in ips.values():
-			msg.append(new_msg)
+		new_msg = (new_bear, request.args.get('message'))
+		for (bear, ind, m) in ips.values():
+			m.append(new_msg)
 	if request.args.has_key('x') and not hitMine :
 		x = int(request.args.get('x'))
 		y = int(request.args.get('y'))
-		if inBound(x, y):
-			if request.args.has_key('flag'):
-				if playerMap[x][y] == None :
-					turn = turn + 1 % 5
-					playerMap[x][y] = -2
-					if gameMap[x][y] == -1 :
-						mines_found -= 1
-					else :
-						mines_found += 1
-				elif playerMap[x][y] == -2:
-					turn = turn + 1 % 5
-					playerMap[x][y] = None
-					if gameMap[x][y] == -1: 
-						mines_found += 1
-					else :
-						mines_found -= 1
-				if checkWin() :
-					print "winning"
-					response['win'] = "true"
-			elif playerMap[x][y] == None:
-				turn = turn + 1 % 5
-				if gameMap[x][y] == -1:
-					hitMine = True
-					playerMap[x][y] = -1
-					response["question"] = "Who is the first hedgehog?"
-					mines_found -= 1
-				else :
-					expand(x,y)
-				if checkWin():
-					print "Winning"
-					response['win'] = "true"
+		mine_logic(x,y)
 	if request.args.has_key('answer') and hitMine:
 		if request.args.get('answer') == "andrew" :
 			hitMine = False
 			del response['question']
+	if checkWin():
+		response['win'] = "true"
 	response['messages'] = msg
-	ips[new_ip] = (new_bear, index, [])
-	connected_list = []
-	for (key, (bear, index, msg)) in ips.items() :
-		connected_list.append((bear, index, key))
-	response['connected'] = connected_list
-	response['player'] = (new_bear, index, new_ip)
+	ips[new_ip] = (new_bear, new_index, [])
+	handle_connected(new_bear, new_index, new_ip)
 	rep = make_response(json.dumps(response))
 	rep.headers['Access-Control-Allow-Origin'] = "*"
 	return rep
