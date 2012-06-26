@@ -27,7 +27,7 @@ question_time = (question) ->
     return false
 
 win = ->
-  $("#win").show()
+  $("#win").slideDown()
 
 update_view = (data) ->
   data = $.parseJSON data

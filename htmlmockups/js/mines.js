@@ -38,7 +38,7 @@
   };
 
   win = function() {
-    return $("#win").show();
+    return $("#win").slideDown();
   };
 
   update_view = function(data) {
