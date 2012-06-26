@@ -16,6 +16,8 @@ hitMine = False
 response = {"state": playerMap}
 ips = dict()
 last_ping = dict()
+mines_found = 20
+turn = 0
 
 def checkAlive():
 	while (True):
@@ -93,26 +95,39 @@ def mine_server():
 	global hitMine
 	global bears
 	global count
+	global mines_found
 	new_ip = request.access_route[0]
 	if new_ip not in ips :
 		(index, nbear) = bears.pop(0)
 		ips[new_ip] = (nbear, index, [])
 	last_ping[new_ip] = time.time()
+	(new_bear, index, msg) = ips.get(new_ip)
 	if request.args.has_key('message') :
 		(owner, index, msg) = ips.get(new_ip)
 		new_msg = (owner, request.args.get('message'))
 		for (bear, index, msg) in ips.values():
 			msg.append(new_msg)
-	if request.args.has_key('x') and not hitMine :
+	if turn == index and request.args.has_key('x') and not hitMine :
 		x = int(request.args.get('x'))
 		y = int(request.args.get('y'))
 		if inBound(x, y):
 			if request.args.has_key('flag'):
 				if playerMap[x][y] == None :
+					turn = turn + 1 % 5
 					playerMap[x][y] = -2
+					if gameMap[x][y] == -1 :
+						mines_found -= 1
+					else :
+						mines_found += 1
 				elif playerMap[x][y] == -2:
+					turn = turn + 1 % 5
 					playerMap[x][y] = None
+					if gameMap[x][y] == -1: 
+						mines_found += 1
+					else :
+						mines_found -= 1
 			elif playerMap[x][y] == None:
+				turn = turn + 1 % 5
 				if gameMap[x][y] == -1:
 					hitMine = True
 					playerMap[x][y] = -1
@@ -123,7 +138,6 @@ def mine_server():
 		if request.args.get('answer') == "andrew" :
 			hitMine = False
 			del response['question']
-	(new_bear, index, msg) = ips.get(new_ip)
 	response['messages'] = msg
 	ips[new_ip] = (new_bear, index, [])
 	connected_list = []
