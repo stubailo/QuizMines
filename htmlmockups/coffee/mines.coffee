@@ -1,4 +1,4 @@
-server_url = "http://localhost:5000"
+server_url = "http://10.156.25.239:5000"
 
 start_update_clock = ->
   setInterval update, 3000
@@ -36,9 +36,15 @@ update_view = (data) ->
   render_board data
   $("#last_update").text(new Date())
 
+  update_buddy_list(data.connected)
+
+
 log_messages = (messages) ->
   for message in messages
-    $("#log_window").append "<p>" + message + "</p>"
+    $("#log_window").append( "<div class='sender'>" + message[0] + "</div>")
+    $("#log_window").append( "<div class='message'>" + message[1] + "</div>")
+    lw = $("#log_window").get(0)
+    lw.scrollTop = lw.scrollHeight;
 
 end_question_time = ->
   $("#question_dialog").hide()
@@ -114,11 +120,24 @@ init_chat = ->
         url: server_url
         data:
           message: $("#chat_form input").val()
+        success: update_view
       $("#chat_form input").val("") 
     return false
+
+update_buddy_list = (buddies) ->
+  $("#buddy_list").html("")
+  for buddy in buddies
+    entry = $ "<div class='buddy_list_item'>"
+    entry.append $ "<div class='bear_small bear_#{buddy[1]}'>"
+    entry.append $ "<p>#{buddy[0]}</p>"
+    entry.append $ "<p>#{buddy[2]}</p>"
+
+    $("#buddy_list").append entry
 
 $ ->
   init_chat()
   end_question_time()
   update()
   start_update_clock()
+
+

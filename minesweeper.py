@@ -101,7 +101,7 @@ def mine_server():
 	last_ping[new_ip] = time.clock()
 	if request.args.has_key('message') :
 		(owner, index, msg) = ips.get(new_ip)
-		new_msg = (ownder, request.args.get('message'))
+		new_msg = (owner, request.args.get('message'))
 		for (bear, index, msg) in ips.values():
 			msg.append(new_msg)
 	if request.args.has_key('x') and not hitMine :

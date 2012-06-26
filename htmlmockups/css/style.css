@@ -3,6 +3,39 @@
     border: 1px solid #ccc;
     height: 20em;
     margin: 10px 0;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+#log_window .sender {
+    font-size: .8em;
+    font-weight: bold;
+}
+
+#log_window .message {
+    margin-bottom: 4px;
+}
+
+#buddy_list .buddy_list_item .bear_small {
+    float: left;
+}
+
+#buddy_list .buddy_list_item {
+
+    height: 65px;
+}
+
+#buddy_list .buddy_list_item p {
+    padding-left: 50px;
+    padding-top: 7px;
+    margin: 0;
+    display: block;
+}
+
+
+
+#log_window p {
+    margin: 5px;
 }
 
 .mine_button {
@@ -30,9 +63,19 @@
     display: inline-block;
 }
 
+.bear_small {
+    background-image: url(bears.jpg);
+    width: 42px;
+    height: 57px;
+    border-radius: 5px;
+    background-size: 800%;
+    display: inline-block;
+}
+
+
 
 .bear_0 { background-position: 83% 0 }
 .bear_1 { background-position: 1% 66% }
-.bear_2 { background-position: 17% 97% }
+.bear_2 { background-position: 17% 99% }
 .bear_3 { background-position: 34% 1% }
 .bear_4 { background-position: 34% 33% }
