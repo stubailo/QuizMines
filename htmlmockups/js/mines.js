@@ -10,7 +10,8 @@
   };
 
   update_url = function() {
-    return server_url = $("#ip_form input").val();
+    server_url = $("#ip_form input").val();
+    return false;
   };
 
   update = function() {

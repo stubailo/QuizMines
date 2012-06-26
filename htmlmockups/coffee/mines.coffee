@@ -5,6 +5,7 @@ start_update_clock = ->
 
 update_url = ->
   server_url = $("#ip_form input").val()
+  return false
 
 update = ->
   $.ajax
