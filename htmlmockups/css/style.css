@@ -9,4 +9,15 @@
     height: 40px;
     width: 40px;
     margin: 2px;
+    font-weight: bold;
 }
+
+.mine_0 { background-color: #eee; border: none; color: #fff;}
+.mine_1 { color: #00c; }
+.mine_2 { color: #093; }
+.mine_3 { color: #f00; }
+.mine_4 { color: #009; }
+.mine_5 { color: #930; }
+.mine_6 { color: #90c; }
+.mine_7 { color: #000; }
+.mine_8 { color: #444; }

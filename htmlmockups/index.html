@@ -19,10 +19,40 @@
       </div>
 
       <div class="row">
-        <div class="span12">
+        <div class="span9">
           <h2>Welcome, Bedtime.</h2>
           <p>Where's Birthday?  We can't start without him :[</p>
         </div>
+        <div class="span3">
+          <h4>Last update at:</h4>
+          <p id="last_update"></p>
+        </div>
+      </div>
+
+      <div id="question_dialog">
+  
+      <hr />
+
+      <div class="row">
+        <div class="span12">
+          <div class="alert alert-error">
+            <div class="row">
+              <div class="span5">
+                <h3>It's question time!</h3>
+                <p>You hit a mine and now it's time to answer a trivia question.</p>
+              </div>
+              <div class="span6">
+                <h4 id="question_question"></h4>
+                <form>
+                  <input type="text" placeholder="Type your answer here and submit." />
+                  <input type="submit" value="Submit" class="btn" />
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       </div>
 
       <hr />
@@ -54,7 +84,9 @@
 
 
       </div>
- 
+
+      <hr />
+
       <div class="row">
         <div class="span12">
           Brought to you by Bedtime, Birthday, Cheer, Friend, and Funshine.
