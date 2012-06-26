@@ -8,6 +8,7 @@ NUM_MINES=20
 
 app = Flask(__name__)
 bears = ["Baby Hugs Bear", "Funshine Bear", "Birthday Bear", "Cheer Bear", "Friend Bear"]
+count = 0
 gameMap = []
 playerMap = []
 hitMine = False
@@ -58,12 +59,12 @@ def compute_state(x,y):
 			if mines == 0 :
 				compute_state(x-1, y)
 				compute_state(x, y-1)
-				#compute_state(x-1, y-1)
+				compute_state(x-1, y-1)
 				compute_state(x+1, y)
 				compute_state(x, y+1)
-				#compute_state(x+1, y+1)
-				#compute_state(x-1, y+1)
-				#compute_state(x+1, y-1)
+				compute_state(x+1, y+1)
+				compute_state(x-1, y+1)
+				compute_state(x+1, y-1)
 			return mines
 def expand(x,y):
 	mines = compute_mine(x,y)
@@ -78,13 +79,15 @@ def expand(x,y):
 def mine_server():
 	global hitMine
 	global bears
+	global count
 	new_ip = request.access_route[0]
 	if new_ip not in ips :
-		ips[new_ip] = (bears.pop(), [])
+		ips[new_ip] = (bears[count], count, [])
+		count = count + 1
 	if request.args.has_key('message') :
-		(owner, msg) = ips.get(new_ip)
+		(owner, index, msg) = ips.get(new_ip)
 		new_msg = owner + " says: " + request.args.get('message')
-		for (bear, msg) in ips.values():
+		for (bear, index, msg) in ips.values():
 			msg.append(new_msg)
 	if request.args.has_key('x') and not hitMine :
 		x = int(request.args.get('x'))
@@ -106,11 +109,13 @@ def mine_server():
 		if request.args.get('answer') == "andrew" :
 			hitMine = False
 			del response['question']
-	(new_bear, msg) = ips.get(new_ip)
-	print msg
+	(new_bear, index, msg) = ips.get(new_ip)
 	response['messages'] = msg
-	ips[new_ip] = (new_bear, [])
-	response['connected'] = ips.keys()
+	ips[new_ip] = (new_bear, index, [])
+	connected_list = []
+	for (key, (bear, index, msg)) in ips.items() :
+		connected_list.append((bear, index, key))
+	response['connected'] = connected_list
 	rep = make_response(json.dumps(response))
 	rep.headers['Access-Control-Allow-Origin'] = "*"
 	return rep
