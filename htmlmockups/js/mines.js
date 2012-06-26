@@ -131,14 +131,15 @@
 
   init_chat = function() {
     return $("#chat_form").submit(function(event) {
-      var message;
       event.preventDefault();
       if ($("#chat_form input").val()) {
-        $("#chat_form input").val("");
         $.ajax({
           url: server_url,
-          data: message = $("#chat_form input").val()
+          data: {
+            message: $("#chat_form input").val()
+          }
         });
+        $("#chat_form input").val("");
       }
       return false;
     });

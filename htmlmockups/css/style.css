@@ -21,3 +21,16 @@
 .mine_6 { color: #90c; }
 .mine_7 { color: #000; }
 .mine_8 { color: #444; }
+
+.bear {
+    background-image: url(bears.jpg);
+    width: 95px;
+    height: 120px;
+}
+
+
+.bear_0 { background-position: 84% 0 }
+.bear_1 { background-position: 0 50% }
+.bear_2 { background-position: 14.2% 75% }
+.bear_3 { background-position: 28.6% 0 }
+.bear_4 { background-position: 28.6% 25% }

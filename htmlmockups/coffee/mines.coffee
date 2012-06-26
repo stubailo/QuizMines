@@ -110,11 +110,11 @@ init_chat = ->
   $("#chat_form").submit (event) ->
     event.preventDefault()
     if $("#chat_form input").val()
-      $("#chat_form input").val("") 
       $.ajax
         url: server_url
         data:
-          message = $("#chat_form input").val()
+          message: $("#chat_form input").val()
+      $("#chat_form input").val("") 
     return false
 
 $ ->
