@@ -24,13 +24,15 @@
 
 .bear {
     background-image: url(bears.jpg);
-    width: 95px;
-    height: 120px;
+    width: 85px;
+    height: 115px;
+    border-radius: 10px;
+    display: inline-block;
 }
 
 
-.bear_0 { background-position: 84% 0 }
-.bear_1 { background-position: 0 50% }
-.bear_2 { background-position: 14.2% 75% }
-.bear_3 { background-position: 28.6% 0 }
-.bear_4 { background-position: 28.6% 25% }
+.bear_0 { background-position: 83% 0 }
+.bear_1 { background-position: 1% 66% }
+.bear_2 { background-position: 17% 97% }
+.bear_3 { background-position: 34% 1% }
+.bear_4 { background-position: 34% 33% }
