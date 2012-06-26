@@ -7,7 +7,7 @@ HEIGHT=10
 NUM_MINES=20
 
 app = Flask(__name__)
-bears = ["Baby Hugs Bear", "Funshine Bear", "Birthday Bear", "Cheer Bear", "Friend Bear"]
+bears = ["Baby Hugs Bear", "Birthday Bear", "Cheer Bear", "Friend Bear", "Funshine Bear"]
 count = 0
 gameMap = []
 playerMap = []
@@ -86,7 +86,7 @@ def mine_server():
 		count = count + 1
 	if request.args.has_key('message') :
 		(owner, index, msg) = ips.get(new_ip)
-		new_msg = owner + " says: " + request.args.get('message')
+		new_msg = (ownder, request.args.get('message'))
 		for (bear, index, msg) in ips.values():
 			msg.append(new_msg)
 	if request.args.has_key('x') and not hitMine :
