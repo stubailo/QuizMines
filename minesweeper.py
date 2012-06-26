@@ -13,7 +13,7 @@ hitMine = False
 mine_x = 0
 mine_y = 0
 response = {"state": playerMap}
-ips = set()
+ips = dict()
 
 def create_game():
 	for i in range(0, WIDTH):
@@ -82,15 +82,19 @@ def mine_server():
 	global mine_y
 	new_ip = request.access_route[0]
 	if new_ip in ips :
-		print "existing ip"
-		# need logic
+		print new_ip
 	else:
-		ips.add(new_ip)
+		msg = []
+		for ip in ips.keys() :
+			if ip != new_ip:
+				msg.append(ip, " has joined")
+				old = ips.get(ip)
+				old.append(new_ip, " has joined")
+		ips[new_ip] = msg
 	if request.args.has_key('x') and not hitMine :
-		print "here"
 		x = int(request.args.get('x'))
 		y = int(request.args.get('y'))
-		if inBound(x, y):
+		if inBound(x, y) and playerMap[x][y] == None:
 			if gameMap[x][y] == -1:
 				hitMine = True
 				mine_x = x
@@ -103,6 +107,9 @@ def mine_server():
 			hitMine = False
 			playerMap[mine_x][mine_y] = -1
 			del response['question']
+	msg = ips.get(new_ip)
+	ips[new_ip] = []
+	response['message'] = msg
 	rep = make_response(json.dumps(response))
 	rep.headers['Access-Control-Allow-Origin'] = "*"
 	return rep
