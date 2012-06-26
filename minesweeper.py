@@ -6,7 +6,7 @@ import time
 
 WIDTH=10
 HEIGHT=10
-NUM_MINES=20
+NUM_MINES=2
 
 app = Flask(__name__)
 bears = [(0, "Baby Hugs Bear"), (1, "Birthday Bear"), (2,"Cheer Bear"), (3,"Friend Bear"), (4,"Funshine Bear")]
@@ -16,7 +16,7 @@ hitMine = False
 response = {"state": playerMap}
 ips = dict()
 last_ping = dict()
-mines_found = 20
+mines_found = NUM_MINES
 turn = 0
 
 def checkAlive():
@@ -88,7 +88,18 @@ def expand(x,y):
 	for i in range(x-1,x+2):
 		for j in range (y-1, y+2):
 			if inBound(i,j) and compute_mine(i,j) == 0 :
-				compute_state(i,j)		
+				compute_state(i,j)	
+
+def checkWin():
+	global mines_found
+	if mines_found == 0:
+		for i in range(0, WIDTH) :
+			for j in range(0, HEIGHT):
+				if playerMap[i][j] == None :
+					return False
+		print "win!"
+		return True
+	return False 	
 	
 @app.route('/', methods=['POST', 'GET'])
 def mine_server():
@@ -127,7 +138,8 @@ def mine_server():
 						mines_found += 1
 					else :
 						mines_found -= 1
-				if mines_found == 0 :
+				if checkWin() :
+					print "winning"
 					response['win'] = "true"
 			elif playerMap[x][y] == None:
 				turn = turn + 1 % 5
@@ -136,10 +148,11 @@ def mine_server():
 					playerMap[x][y] = -1
 					response["question"] = "Who is the first hedgehog?"
 					mines_found -= 1
-					if mines_found == 0:
-						resposne['win'] = "true"
 				else :
 					expand(x,y)
+				if checkWin():
+					print "Winning"
+					response['win'] = "true"
 	if request.args.has_key('answer') and hitMine:
 		if request.args.get('answer') == "andrew" :
 			hitMine = False
