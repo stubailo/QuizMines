@@ -2,7 +2,7 @@ var static = require('node-static'),
   http = require('http'),
   util = require('util');
 var webroot = '.',
-  port = 5000;
+  port = 5001;
 var file = new(static.Server)(webroot, {
   cache: 600,
   headers: { 'X-Powered-By': 'node-static', "Access-Control-Allow-Origin" : "*" }

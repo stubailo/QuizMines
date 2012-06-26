@@ -4,3 +4,9 @@
     height: 20em;
     margin: 10px 0;
 }
+
+.mine_button {
+    height: 40px;
+    width: 40px;
+    margin: 2px;
+}
