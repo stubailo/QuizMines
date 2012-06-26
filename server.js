@@ -5,7 +5,7 @@ var webroot = '.',
   port = 5000;
 var file = new(static.Server)(webroot, {
   cache: 600,
-  headers: { 'X-Powered-By': 'node-static' }
+  headers: { 'X-Powered-By': 'node-static', "Access-Control-Allow-Origin" : "*" }
 });
 http.createServer(function(req, res) {
   req.addListener('end', function() {
@@ -13,7 +13,7 @@ http.createServer(function(req, res) {
       if (err) {
         console.error('Error serving %s - %s', req.url, err.message);
         if (err.status === 404 || err.status === 500) {
-          file.serveFile(util.format('/%d.html', err.status), err.status, {"Access-Control-Allow-Origin": "*"}, req, res);
+          file.serveFile(util.format('/%d.html', err.status), err.status, null, req, res);
         } else {
           res.writeHead(err.status, err.headers);
           res.end();

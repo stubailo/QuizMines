@@ -1,4 +1,4 @@
-server_url = "http://10.156.25.207:5000"
+server_url = "http://localhost:5000"
 
 update = ->
   $.ajax
@@ -6,13 +6,18 @@ update = ->
     data:
       x: 1
       y: 1
-    success: -> render_board
+    success: render_board
 
 render_board = (data) ->
+  alert "heyo"
   board = $("#board_wrapper")
   board.html("")
- 
-  board.html(data)
+
+  console.log data
+
+  for row in data.state
+    for item in row
+      board.append "x"
 
 $ ->
   update()
