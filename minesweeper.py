@@ -9,6 +9,10 @@ NUM_MINES=20
 app = Flask(__name__)
 gameMap = []
 playerMap = []
+hitMine = False
+mine_x = 0
+mine_y = 0
+response = {"state": playerMap}
 ips = set()
 
 def create_game():
@@ -73,23 +77,33 @@ def expand(x,y):
 	
 @app.route('/', methods=['POST', 'GET'])
 def mine_server():
-	output = dict()
+	global hitMine
+	global mine_x
+	global mine_y
 	new_ip = request.access_route[0]
 	if new_ip in ips :
 		print "existing ip"
 		# need logic
 	else:
 		ips.add(new_ip)
-	if request.args.has_key('x'):
+	if request.args.has_key('x') and not hitMine :
+		print "here"
 		x = int(request.args.get('x'))
 		y = int(request.args.get('y'))
 		if inBound(x, y):
 			if gameMap[x][y] == -1:
-				output["question"] = "Who is the first hedgehog?"
+				hitMine = True
+				mine_x = x
+				mine_y = y
+				response["question"] = "Who is the first hedgehog?"
 			else :
 				expand(x,y)
-	output["state"] = playerMap
-	rep = make_response(json.dumps(output))
+	if request.args.has_key('answer') and hitMine:
+		if request.args.get('answer') == "andrew" :
+			hitMine = False
+			playerMap[mine_x][mine_y] = -1
+			del response['question']
+	rep = make_response(json.dumps(response))
 	rep.headers['Access-Control-Allow-Origin'] = "*"
 	return rep
 
