@@ -1,19 +1,32 @@
 from flask import Flask, request, make_response
 from random import randint
 import json
+import thread
+import time
 
 WIDTH=10
 HEIGHT=10
 NUM_MINES=20
 
 app = Flask(__name__)
-bears = ["Baby Hugs Bear", "Birthday Bear", "Cheer Bear", "Friend Bear", "Funshine Bear"]
-count = 0
+bears = [(0, "Baby Hugs Bear"), (1, "Birthday Bear"), (2,"Cheer Bear"), (3,"Friend Bear"), (4,"Funshine Bear")]
 gameMap = []
 playerMap = []
 hitMine = False
 response = {"state": playerMap}
 ips = dict()
+last_ping = dict()
+
+def checkAlive():
+	while (True):
+		time.sleep(2)
+		for (key, value) in last_ping.items():
+			print time.clock()-value
+			if (time.clock() - value) > 10 :
+				(bear, index, msg) = ips.get(key)
+				bears.append((index, bear))			
+				del ips[key]
+				del last_ping[key]
 
 def create_game():
 	for i in range(0, WIDTH):
@@ -82,8 +95,10 @@ def mine_server():
 	global count
 	new_ip = request.access_route[0]
 	if new_ip not in ips :
-		ips[new_ip] = (bears[count], count, [])
-		count = count + 1
+		(index, nbear) = bears.pop()
+		ips[new_ip] = (nbear, index, [])
+	
+	last_ping[new_ip] = time.clock()
 	if request.args.has_key('message') :
 		(owner, index, msg) = ips.get(new_ip)
 		new_msg = (ownder, request.args.get('message'))
@@ -122,5 +137,6 @@ def mine_server():
 
 if __name__ == '__main__' :
 	create_game()
+	thread.start_new_thread(checkAlive, ())
 	app.debug = True
 	app.run(host='0.0.0.0')
