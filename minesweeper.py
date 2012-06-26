@@ -44,7 +44,7 @@ def create_game():
 		while(not planted):
 			x = randint(0,9)
 			y = randint(0,9)
-			if (gameMap[x][y] != 1) :
+			if (gameMap[x][y] != -1) :
 				gameMap[x][y] = -1
 				planted = True
 	return map
@@ -127,8 +127,8 @@ def mine_server():
 						mines_found += 1
 					else :
 						mines_found -= 1
-			if mines_found == 0 :
-				response['win'] = "true"
+				if mines_found == 0 :
+					response['win'] = "true"
 			elif playerMap[x][y] == None:
 				turn = turn + 1 % 5
 				if gameMap[x][y] == -1:
