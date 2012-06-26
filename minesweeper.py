@@ -130,7 +130,7 @@ def mine_server():
 	for (key, (bear, index, msg)) in ips.items() :
 		connected_list.append((bear, index, key))
 	response['connected'] = connected_list
-	response['player'] = (newbear, index, new_ip)
+	response['player'] = (new_bear, index, new_ip)
 	rep = make_response(json.dumps(response))
 	rep.headers['Access-Control-Allow-Origin'] = "*"
 	return rep

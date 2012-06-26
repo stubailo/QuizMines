@@ -3,6 +3,8 @@ server_url = "http://10.156.25.239:5000"
 start_update_clock = ->
   setInterval update, 3000
 
+update_url = ->
+  server_url = $("#ip_form input").val()
 
 update = ->
   $.ajax
@@ -36,7 +38,7 @@ update_view = (data) ->
   render_board data
   $("#last_update").text(new Date())
 
-  update_buddy_list(data.connected)
+  update_buddy_list(data)
 
 
 log_messages = (messages) ->
@@ -124,17 +126,28 @@ init_chat = ->
       $("#chat_form input").val("") 
     return false
 
-update_buddy_list = (buddies) ->
+update_buddy_list = (data) ->
+  buddies = data.connected
+
   $("#buddy_list").html("")
   for buddy in buddies
     entry = $ "<div class='buddy_list_item'>"
     entry.append $ "<div class='bear_small bear_#{buddy[1]}'>"
-    entry.append $ "<p>#{buddy[0]}</p>"
+    if data.player[1] == buddy[1]
+      entry.append $ "<p>#{buddy[0]} (you)</p>"
+    else
+      entry.append $ "<p>#{buddy[0]}</p>"
+      
     entry.append $ "<p>#{buddy[2]}</p>"
 
     $("#buddy_list").append entry
 
+init_ip_form = ->
+  $("#ip_form input").val(server_url)
+  $("#ip_form").submit update_url
+
 $ ->
+  init_ip_form()
   init_chat()
   end_question_time()
   update()

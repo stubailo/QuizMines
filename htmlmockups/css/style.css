@@ -10,10 +10,17 @@
 #log_window .sender {
     font-size: .8em;
     font-weight: bold;
+    margin: 4px;
+    margin-bottom: -6px;
+    padding: 0;
 }
 
 #log_window .message {
-    margin-bottom: 4px;
+    margin-top: 0;
+    margin: 4px;
+    padding: 0;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #ddd;
 }
 
 #buddy_list .buddy_list_item .bear_small {
