@@ -7,6 +7,7 @@ import time
 WIDTH=10
 HEIGHT=10
 NUM_MINES=20
+NUM_PPL=2
 
 app = Flask(__name__)
 bears = [(0, "Baby Hugs Bear"), (1, "Birthday Bear"), (2,"Cheer Bear"), (3,"Friend Bear"), (4,"Funshine Bear")]
@@ -111,21 +112,21 @@ def mine_logic(x, y) :
 	if inBound(x, y):
 		if request.args.has_key('flag'):
 			if playerMap[x][y] == None :
-				turn = turn + 1 % 5
+				turn = turn + 1 % NUM_PPL
 				playerMap[x][y] = -2
 				if gameMap[x][y] == -1 :
 					mines_found -= 1
 				else :
 					mines_found += 1
 			elif playerMap[x][y] == -2:
-				turn = turn + 1 % 5	
+				turn = turn + 1 % NUM_PPL	
 				playerMap[x][y] = None
 				if gameMap[x][y] == -1: 
 					mines_found += 1
 				else :
 					mines_found -= 1
 		elif playerMap[x][y] == None:
-			turn = turn + 1 % 5
+			turn = turn + 1 % NUM_PPL
 			if gameMap[x][y] == -1:
 				hitMine = True
 				playerMap[x][y] = -1
@@ -148,6 +149,11 @@ def mine_server():
 	global hitMine
 	new_ip = request.access_route[0]
 	if new_ip not in ips :
+		if len(bears) == 0 :
+			overload['extra']="true"
+			over_rep = make_response(json.dumps(overload))
+			over_rep.headers['Access-Control-Allow-Origin']= "*"
+			return over_rep
 		(index, nbear) = bears.pop(0)
 		ips[new_ip] = (nbear, index, [])
 	last_ping[new_ip] = time.time()
