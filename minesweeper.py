@@ -6,7 +6,7 @@ import time
 
 WIDTH=10
 HEIGHT=10
-NUM_MINES=2
+NUM_MINES=20
 
 app = Flask(__name__)
 bears = [(0, "Baby Hugs Bear"), (1, "Birthday Bear"), (2,"Cheer Bear"), (3,"Friend Bear"), (4,"Funshine Bear")]
@@ -129,7 +129,7 @@ def mine_logic(x, y) :
 			if gameMap[x][y] == -1:
 				hitMine = True
 				playerMap[x][y] = -1
-				response["question"] = "Who is the first hedgehog?"
+				response["question"] = "What is the ultimate answer to life, the universe, and everything?"
 				mines_found -= 1
 			else :
 				expand(x,y)
@@ -156,12 +156,12 @@ def mine_server():
 		new_msg = (new_bear, request.args.get('message'))
 		for (bear, ind, m) in ips.values():
 			m.append(new_msg)
-	if request.args.has_key('x') and not hitMine :
+	if turn == new_index and request.args.has_key('x') and not hitMine :
 		x = int(request.args.get('x'))
 		y = int(request.args.get('y'))
 		mine_logic(x,y)
 	if request.args.has_key('answer') and hitMine:
-		if request.args.get('answer') == "andrew" :
+		if request.args.get('answer') == "42":
 			hitMine = False
 			del response['question']
 	if checkWin():
