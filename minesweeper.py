@@ -7,7 +7,7 @@ import time
 WIDTH=10
 HEIGHT=10
 NUM_MINES=20
-NUM_PPL=2
+NUM_PPL=5
 
 app = Flask(__name__)
 bears = [(0, "Baby Hugs Bear"), (1, "Birthday Bear"), (2,"Cheer Bear"), (3,"Friend Bear"), (4,"Funshine Bear")]
@@ -99,7 +99,6 @@ def checkWin():
 			for j in range(0, HEIGHT):
 				if playerMap[i][j] == None :
 					return False
-		print "win!"
 		return True
 	return False 	
 
@@ -162,10 +161,16 @@ def mine_server():
 		new_msg = (new_bear, request.args.get('message'))
 		for (bear, ind, m) in ips.values():
 			m.append(new_msg)
-	if turn == new_index and request.args.has_key('x') and not hitMine :
-		x = int(request.args.get('x'))
-		y = int(request.args.get('y'))
-		mine_logic(x,y)
+	if request.args.has_key('x') and not hitMine :
+		if new_index != turn :
+			can_move['moved']="false"
+			move_rep = make_response(json.dumps(can_move))
+			move_rep.header['Access-Control-Allow-Origin']="*"
+			return move_rep
+		else :
+			x = int(request.args.get('x'))
+			y = int(request.args.get('y'))
+			mine_logic(x,y)
 	if request.args.has_key('answer') and hitMine:
 		if request.args.get('answer') == "42":
 			hitMine = False
