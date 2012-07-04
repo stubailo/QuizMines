@@ -1,4 +1,4 @@
-server_url = "http://10.156.25.207:5000"
+server_url = "http://10.156.25.239:5000"
 
 start_update_clock = ->
   setInterval update, 3000
@@ -32,21 +32,24 @@ win = ->
 update_view = (data) ->
   data = $.parseJSON data
 
-  if data.win
-    win()
-
-  if data.question
-    question_time(data.question)
+  if data.moved is "false"
+    log_messages([["System", "It's not your turn! :]"]]) 
   else
-    end_question_time()
+    if data.win
+      win()
 
-  if data.messages
-    log_messages(data.messages)
+    if data.question
+      question_time(data.question)
+    else
+      end_question_time()
 
-  render_board data
-  $("#last_update").text(new Date())
+    if data.messages
+      log_messages(data.messages)
 
-  update_buddy_list(data)
+    render_board data
+    $("#last_update").text(new Date())
+
+    update_buddy_list(data)
 
 
 log_messages = (messages) ->
@@ -155,10 +158,19 @@ init_ip_form = ->
   $("#ip_form").submit update_url
 
 $ ->
-  init_ip_form()
-  init_chat()
-  end_question_time()
-  update()
-  start_update_clock()
+  check_for_too_many_players_and_start = (response) ->
+    console.log response
+    if ($.parseJSON response).extra
+      alert "Too many users logged in.  5 is the maximum."
+    else
+      init_ip_form()
+      init_chat()
+      end_question_time()
+      update()
+      start_update_clock()
+  $.ajax
+    url: server_url
+    success: check_for_too_many_players_and_start
+
 
 

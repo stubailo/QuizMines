@@ -21,171 +21,172 @@ mines_found = NUM_MINES
 turn = 0
 
 def checkAlive():
-	while (True):
-		time.sleep(2)
-		for (key, value) in last_ping.items():
-			print time.time()-value
-			if (time.time() - value) > 10 :
-				(bear, index, msg) = ips.get(key)
-				bears.append((index, bear))			
-				del ips[key]
-				del last_ping[key]
+    while (True):
+        time.sleep(2)
+        for (key, value) in last_ping.items():
+            print time.time()-value
+            if (time.time() - value) > 10 :
+                (bear, index, msg) = ips.get(key)
+                bears.append((index, bear))         
+                del ips[key]
+                del last_ping[key]
 
 def create_game():
-	for i in range(0, WIDTH):
-		row = []
-		p_row=[]
-		for j in range(0, HEIGHT):
-			row.append(None)
-			p_row.append(None)
-		gameMap.append(row)
-		playerMap.append(p_row)
-	for i in range(0,NUM_MINES) :
-		planted = False
-		while(not planted):
-			x = randint(0,9)
-			y = randint(0,9)
-			if (gameMap[x][y] != -1) :
-				gameMap[x][y] = -1
-				planted = True
-	return map
+    for i in range(0, WIDTH):
+        row = []
+        p_row=[]
+        for j in range(0, HEIGHT):
+            row.append(None)
+            p_row.append(None)
+        gameMap.append(row)
+        playerMap.append(p_row)
+    for i in range(0,NUM_MINES) :
+        planted = False
+        while(not planted):
+            x = randint(0,9)
+            y = randint(0,9)
+            if (gameMap[x][y] != -1) :
+                gameMap[x][y] = -1
+                planted = True
+    return map
 
 def inBound(x, y):
-	return (x >= 0 and x < WIDTH and y>= 0 and y < HEIGHT)
+    return (x >= 0 and x < WIDTH and y>= 0 and y < HEIGHT)
 
 def compute_mine(x, y):
-	if gameMap[x][y] == -1 :
-		return -1
-	mines = 0
-	for i in range(x-1,x+2):
-		for j in range (y-1, y+2):
-			if inBound(i,j) and gameMap[i][j] == -1:
-				mines = mines + 1
-	return mines
+    if gameMap[x][y] == -1 :
+        return -1
+    mines = 0
+    for i in range(x-1,x+2):
+        for j in range (y-1, y+2):
+            if inBound(i,j) and gameMap[i][j] == -1:
+                mines = mines + 1
+    return mines
 
 def compute_state(x,y):
-	if inBound(x,y):
-		if playerMap[x][y] != None :
-			return -2
-		mines = compute_mine(x,y)
-		if mines == -1 :
-			return -1
-		else:
-			playerMap[x][y] = mines
-			if mines == 0 :
-				compute_state(x-1, y)
-				compute_state(x, y-1)
-				compute_state(x-1, y-1)
-				compute_state(x+1, y)
-				compute_state(x, y+1)
-				compute_state(x+1, y+1)
-				compute_state(x-1, y+1)
-				compute_state(x+1, y-1)
-			return mines
+    if inBound(x,y):
+        if playerMap[x][y] != None :
+            return -2
+        mines = compute_mine(x,y)
+        if mines == -1 :
+            return -1
+        else:
+            playerMap[x][y] = mines
+            if mines == 0 :
+                compute_state(x-1, y)
+                compute_state(x, y-1)
+                compute_state(x-1, y-1)
+                compute_state(x+1, y)
+                compute_state(x, y+1)
+                compute_state(x+1, y+1)
+                compute_state(x-1, y+1)
+                compute_state(x+1, y-1)
+            return mines
 def expand(x,y):
-	mines = compute_mine(x,y)
-	if mines != 0 :
-		playerMap[x][y] = mines
-	for i in range(x-1,x+2):
-		for j in range (y-1, y+2):
-			if inBound(i,j) and compute_mine(i,j) == 0 :
-				compute_state(i,j)	
+    mines = compute_mine(x,y)
+    if mines != 0 :
+        playerMap[x][y] = mines
+    for i in range(x-1,x+2):
+        for j in range (y-1, y+2):
+            if inBound(i,j) and compute_mine(i,j) == 0 :
+                compute_state(i,j)  
 
 def checkWin():
-	global mines_found
-	global hitMine
-	if mines_found == 0 and hitMine == False:
-		for i in range(0, WIDTH) :
-			for j in range(0, HEIGHT):
-				if playerMap[i][j] == None :
-					return False
-		return True
-	return False 	
+    global mines_found
+    global hitMine
+    if mines_found == 0 and hitMine == False:
+        for i in range(0, WIDTH) :
+            for j in range(0, HEIGHT):
+                if playerMap[i][j] == None :
+                    return False
+        return True
+    return False    
 
 def mine_logic(x, y) :
-	global response
-	global turn
-	global mines_found
-	global hitMine
-	global count
-	if inBound(x, y):
-		if request.args.has_key('flag'):
-			if playerMap[x][y] == None :
-				turn = turn + 1 % NUM_PPL
-				playerMap[x][y] = -2
-				if gameMap[x][y] == -1 :
-					mines_found -= 1
-				else :
-					mines_found += 1
-			elif playerMap[x][y] == -2:
-				turn = turn + 1 % NUM_PPL	
-				playerMap[x][y] = None
-				if gameMap[x][y] == -1: 
-					mines_found += 1
-				else :
-					mines_found -= 1
-		elif playerMap[x][y] == None:
-			turn = turn + 1 % NUM_PPL
-			if gameMap[x][y] == -1:
-				hitMine = True
-				playerMap[x][y] = -1
-				response["question"] = "What is the ultimate answer to life, the universe, and everything?"
-				mines_found -= 1
-			else :
-				expand(x,y)
+    global response
+    global turn
+    global mines_found
+    global hitMine
+    global count
+    if inBound(x, y):
+        if request.args.has_key('flag'):
+            if playerMap[x][y] == None :
+                turn = (turn + 1) % NUM_PPL
+                playerMap[x][y] = -2
+                if gameMap[x][y] == -1 :
+                    mines_found -= 1
+                else :
+                    mines_found += 1
+            elif playerMap[x][y] == -2:
+                turn = (turn + 1) % NUM_PPL   
+                playerMap[x][y] = None
+                if gameMap[x][y] == -1: 
+                    mines_found += 1
+                else :
+                    mines_found -= 1
+        elif playerMap[x][y] == None:
+            turn = (turn + 1) % NUM_PPL
+            if gameMap[x][y] == -1:
+                hitMine = True
+                playerMap[x][y] = -1
+                response["question"] = "What is the ultimate answer to life, the universe, and everything?"
+                mines_found -= 1
+            else :
+                expand(x,y)
 
 def handle_connected(new_bear, new_index, new_ip) :
-	global response
-	connected_list = []
-	for (key, (bear, index, msg)) in ips.items() :
-		connected_list.append((bear, index, key))
-	response['connected'] = connected_list
-	response['player'] = (new_bear, new_index, new_ip)
-	
+    global response
+    connected_list = []
+    for (key, (bear, index, msg)) in ips.items() :
+        connected_list.append((bear, index, key))
+    response['connected'] = connected_list
+    response['player'] = (new_bear, new_index, new_ip)
+    
 @app.route('/', methods=['POST', 'GET'])
 def mine_server():
-	global bears
-	global hitMine
-	new_ip = request.access_route[0]
-	if new_ip not in ips :
-		if len(bears) == 0 :
-			overload['extra']="true"
-			over_rep = make_response(json.dumps(overload))
-			over_rep.headers['Access-Control-Allow-Origin']= "*"
-			return over_rep
-		(index, nbear) = bears.pop(0)
-		ips[new_ip] = (nbear, index, [])
-	last_ping[new_ip] = time.time()
-	(new_bear, new_index, msg) = ips.get(new_ip)
-	if request.args.has_key('message') :
-		new_msg = (new_bear, request.args.get('message'))
-		for (bear, ind, m) in ips.values():
-			m.append(new_msg)
-	if request.args.has_key('x') and not hitMine :
-		if new_index != turn :
-			can_move['moved']="false"
-			move_rep = make_response(json.dumps(can_move))
-			move_rep.header['Access-Control-Allow-Origin']="*"
-			return move_rep
-		else :
-			x = int(request.args.get('x'))
-			y = int(request.args.get('y'))
-			mine_logic(x,y)
-	if request.args.has_key('answer') and hitMine:
-		if request.args.get('answer') == "42":
-			hitMine = False
-			del response['question']
-	if checkWin():
-		response['win'] = "true"
-	response['messages'] = msg
-	ips[new_ip] = (new_bear, new_index, [])
-	handle_connected(new_bear, new_index, new_ip)
-	rep = make_response(json.dumps(response))
-	rep.headers['Access-Control-Allow-Origin'] = "*"
-	return rep
+    global bears
+    global hitMine
+    new_ip = request.access_route[0]
+    if new_ip not in ips :
+        if len(bears) == 0 :
+            overload['extra']="true"
+            over_rep = make_response(json.dumps(overload))
+            over_rep.headers['Access-Control-Allow-Origin']= "*"
+            return over_rep
+        (index, nbear) = bears.pop(0)
+        ips[new_ip] = (nbear, index, [])
+    last_ping[new_ip] = time.time()
+    (new_bear, new_index, msg) = ips.get(new_ip)
+    if request.args.has_key('message') :
+        new_msg = (new_bear, request.args.get('message'))
+        for (bear, ind, m) in ips.values():
+            m.append(new_msg)
+    if request.args.has_key('x') and not hitMine :
+        if new_index != turn :
+            can_move = {}
+            can_move['moved']="false"
+            move_rep = make_response(json.dumps(can_move))
+            move_rep.headers['Access-Control-Allow-Origin']="*"
+            return move_rep
+        else :
+            x = int(request.args.get('x'))
+            y = int(request.args.get('y'))
+            mine_logic(x,y)
+    if request.args.has_key('answer') and hitMine:
+        if request.args.get('answer') == "42":
+            hitMine = False
+            del response['question']
+    if checkWin():
+        response['win'] = "true"
+    response['messages'] = msg
+    ips[new_ip] = (new_bear, new_index, [])
+    handle_connected(new_bear, new_index, new_ip)
+    rep = make_response(json.dumps(response))
+    rep.headers['Access-Control-Allow-Origin'] = "*"
+    return rep
 
 if __name__ == '__main__' :
-	create_game()
-	thread.start_new_thread(checkAlive, ())
-	app.debug = True
-	app.run(host='0.0.0.0')
+    create_game()
+    thread.start_new_thread(checkAlive, ())
+    app.debug = True
+    app.run(host='0.0.0.0')

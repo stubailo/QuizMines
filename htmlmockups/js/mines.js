@@ -43,20 +43,24 @@
 
   update_view = function(data) {
     data = $.parseJSON(data);
-    if (data.win) {
-      win();
-    }
-    if (data.question) {
-      question_time(data.question);
+    if (data.moved === "false") {
+      return log_messages([["System", "It's not your turn! :]"]]);
     } else {
-      end_question_time();
+      if (data.win) {
+        win();
+      }
+      if (data.question) {
+        question_time(data.question);
+      } else {
+        end_question_time();
+      }
+      if (data.messages) {
+        log_messages(data.messages);
+      }
+      render_board(data);
+      $("#last_update").text(new Date());
+      return update_buddy_list(data);
     }
-    if (data.messages) {
-      log_messages(data.messages);
-    }
-    render_board(data);
-    $("#last_update").text(new Date());
-    return update_buddy_list(data);
   };
 
   log_messages = function(messages) {
@@ -188,11 +192,23 @@
   };
 
   $(function() {
-    init_ip_form();
-    init_chat();
-    end_question_time();
-    update();
-    return start_update_clock();
+    var check_for_too_many_players_and_start;
+    check_for_too_many_players_and_start = function(response) {
+      console.log(response);
+      if (($.parseJSON(response)).extra) {
+        return alert("Too many users logged in.  5 is the maximum.");
+      } else {
+        init_ip_form();
+        init_chat();
+        end_question_time();
+        update();
+        return start_update_clock();
+      }
+    };
+    return $.ajax({
+      url: server_url,
+      success: check_for_too_many_players_and_start
+    });
   });
 
 }).call(this);
