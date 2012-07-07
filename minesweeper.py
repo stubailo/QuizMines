@@ -7,10 +7,10 @@ import time
 WIDTH=10
 HEIGHT=10
 NUM_MINES=20
-NUM_PPL=5
+NUM_PPL=3
 
 app = Flask(__name__)
-bears = [(0, "Baby Hugs Bear"), (1, "Birthday Bear"), (2,"Cheer Bear"), (3,"Friend Bear"), (4,"Funshine Bear")]
+bears = [(0, "Baby Hugs Bear"), (1, "Birthday Bear"), (2,"Cheer Bear")]#, (3,"Friend Bear")], (4,"Funshine Bear")]
 gameMap = []
 playerMap = []
 hitMine = False
@@ -22,11 +22,12 @@ turn = 0
 
 def checkAlive():
     while (True):
-        time.sleep(2)
+        time.sleep(5)
         for (key, value) in last_ping.items():
-            print time.time()-value
-            if (time.time() - value) > 10 :
+            if (time.time() - value) > 20 :
                 (bear, index, msg) = ips.get(key)
+		print 'removing: ', bear
+		print 'at index: ', index
                 bears.append((index, bear))         
                 del ips[key]
                 del last_ping[key]
@@ -82,6 +83,7 @@ def compute_state(x,y):
                 compute_state(x-1, y+1)
                 compute_state(x+1, y-1)
             return mines
+
 def expand(x,y):
     mines = compute_mine(x,y)
     if mines != 0 :
@@ -100,32 +102,38 @@ def checkWin():
                 if playerMap[i][j] == None :
                     return False
         return True
-    return False    
-
-def mine_logic(x, y) :
+    return False
+    
+def handle_move(bear) :
+	global ips
+	global turn
+        turn = (turn + 1) % NUM_PPL
+	for (key, (b, index, msgs))  in ips.items() :
+		msgs.append(("System", (bear + " has just moved")))	
+			
+def mine_logic(bear, x, y) :
     global response
-    global turn
     global mines_found
     global hitMine
     global count
     if inBound(x, y):
         if request.args.has_key('flag'):
             if playerMap[x][y] == None :
-                turn = (turn + 1) % NUM_PPL
-                playerMap[x][y] = -2
+                handle_move(bear)
+		playerMap[x][y] = -2
                 if gameMap[x][y] == -1 :
                     mines_found -= 1
                 else :
                     mines_found += 1
             elif playerMap[x][y] == -2:
-                turn = (turn + 1) % NUM_PPL   
+                handle_move(bear)
                 playerMap[x][y] = None
                 if gameMap[x][y] == -1: 
                     mines_found += 1
                 else :
                     mines_found -= 1
         elif playerMap[x][y] == None:
-            turn = (turn + 1) % NUM_PPL
+            handle_move(bear)
             if gameMap[x][y] == -1:
                 hitMine = True
                 playerMap[x][y] = -1
@@ -162,7 +170,9 @@ def mine_server():
         for (bear, ind, m) in ips.values():
             m.append(new_msg)
     if request.args.has_key('x') and not hitMine :
-        if new_index != turn :
+        print 'turn is: ', turn
+	print 'index is: ', new_index
+	if new_index != turn :
             can_move = {}
             can_move['moved']="false"
             move_rep = make_response(json.dumps(can_move))
@@ -171,7 +181,7 @@ def mine_server():
         else :
             x = int(request.args.get('x'))
             y = int(request.args.get('y'))
-            mine_logic(x,y)
+            mine_logic(new_bear, x,y)
     if request.args.has_key('answer') and hitMine:
         if request.args.get('answer') == "42":
             hitMine = False

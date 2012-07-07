@@ -1,4 +1,4 @@
-server_url = "http://10.156.25.239:5000"
+server_url = "http://10.156.25.207:5000"
 
 start_update_clock = ->
   setInterval update, 3000
