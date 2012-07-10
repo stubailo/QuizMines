@@ -16,6 +16,14 @@ question_time = (question) ->
   $("#question_dialog").show()
   $("#question_question").text(question)
 
+  $("#question_switch_button").click (event) ->
+    event.preventDefault()
+    $.ajax
+      url: server_url
+      data:
+        switch: true
+      success: update
+    return false
 
   $("#question_dialog form").submit (event) ->
     event.preventDefault()

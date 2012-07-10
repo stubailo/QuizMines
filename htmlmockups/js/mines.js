@@ -24,6 +24,17 @@
   question_time = function(question) {
     $("#question_dialog").show();
     $("#question_question").text(question);
+    $("#question_switch_button").click(function(event) {
+      event.preventDefault();
+      $.ajax({
+        url: server_url,
+        data: {
+          "switch": true
+        },
+        success: update
+      });
+      return false;
+    });
     return $("#question_dialog form").submit(function(event) {
       event.preventDefault();
       $.ajax({
