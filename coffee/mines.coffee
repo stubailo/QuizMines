@@ -16,23 +16,6 @@ question_time = (question) ->
   $("#question_dialog").show()
   $("#question_question").text(question)
 
-  $("#question_switch_button").click (event) ->
-    event.preventDefault()
-    $.ajax
-      url: server_url
-      data:
-        switch: true
-      success: update_view
-    return false
-
-  $("#question_dialog form").submit (event) ->
-    event.preventDefault()
-    $.ajax
-      url: server_url
-      data:
-        answer: $("#question_dialog input[type=text]").val()
-      success: update
-    return false
 
 win = ->
   $("#win").slideDown()
@@ -166,6 +149,23 @@ init_ip_form = ->
   $("#ip_form").submit update_url
 
 $ ->
+  $("#question_switch_button").click (event) ->
+    event.preventDefault()
+    $.ajax
+      url: server_url
+      data:
+        switch: true
+      success: update_view
+    return false
+
+  $("#question_dialog form").submit (event) ->
+    event.preventDefault()
+    $.ajax
+      url: server_url
+      data:
+        answer: $("#question_dialog input[type=text]").val()
+      success: update
+    return false
   check_for_too_many_players_and_start = (response) ->
     console.log response
     if ($.parseJSON response).extra

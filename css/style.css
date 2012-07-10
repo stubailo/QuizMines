@@ -27,6 +27,7 @@
     padding: 0;
     padding-bottom: 2px;
     border-bottom: 1px solid #ddd;
+    line-height: 1.1em;
 }
 
 #buddy_list .buddy_list_item .bear_small {

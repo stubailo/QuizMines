@@ -23,29 +23,7 @@
 
   question_time = function(question) {
     $("#question_dialog").show();
-    $("#question_question").text(question);
-    $("#question_switch_button").click(function(event) {
-      event.preventDefault();
-      $.ajax({
-        url: server_url,
-        data: {
-          "switch": true
-        },
-        success: update_view
-      });
-      return false;
-    });
-    return $("#question_dialog form").submit(function(event) {
-      event.preventDefault();
-      $.ajax({
-        url: server_url,
-        data: {
-          answer: $("#question_dialog input[type=text]").val()
-        },
-        success: update
-      });
-      return false;
-    });
+    return $("#question_question").text(question);
   };
 
   win = function() {
@@ -204,6 +182,28 @@
 
   $(function() {
     var check_for_too_many_players_and_start;
+    $("#question_switch_button").click(function(event) {
+      event.preventDefault();
+      $.ajax({
+        url: server_url,
+        data: {
+          "switch": true
+        },
+        success: update_view
+      });
+      return false;
+    });
+    $("#question_dialog form").submit(function(event) {
+      event.preventDefault();
+      $.ajax({
+        url: server_url,
+        data: {
+          answer: $("#question_dialog input[type=text]").val()
+        },
+        success: update
+      });
+      return false;
+    });
     check_for_too_many_players_and_start = function(response) {
       console.log(response);
       if (($.parseJSON(response)).extra) {

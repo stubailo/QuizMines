@@ -7,7 +7,7 @@ import time
 WIDTH=10
 HEIGHT=10
 NUM_MINES=20
-NUM_PPL=2
+NUM_PPL=1
 
 app = Flask(__name__)
 bears = [(0, "Baby Hugs Bear"), (1, "Birthday Bear")]#, (2,"Cheer Bear")]#, (3,"Friend Bear")], (4,"Funshine Bear")]
