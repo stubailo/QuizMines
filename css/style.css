@@ -1,7 +1,7 @@
 #log_window
 {
     border: 1px solid #ccc;
-    height: 20em;
+    height: 25em;
     margin: 10px 0;
     overflow: scroll;
     overflow-x: hidden;
@@ -15,16 +15,17 @@
 #log_window .sender {
     font-size: .8em;
     font-weight: bold;
-    margin: 4px;
+    margin: 2px;
     margin-bottom: -6px;
     padding: 0;
 }
 
 #log_window .message {
+    font-size: .9em;
     margin-top: 0;
-    margin: 4px;
+    margin: 2px;
     padding: 0;
-    padding-bottom: 4px;
+    padding-bottom: 2px;
     border-bottom: 1px solid #ddd;
 }
 

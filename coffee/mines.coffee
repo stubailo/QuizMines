@@ -1,4 +1,4 @@
-server_url = "http://10.156.25.207:5000"
+server_url = "http://10.156.25.239:5000"
 
 start_update_clock = ->
   setInterval update, 3000
@@ -22,7 +22,7 @@ question_time = (question) ->
       url: server_url
       data:
         switch: true
-      success: update
+      success: update_view
     return false
 
   $("#question_dialog form").submit (event) ->
