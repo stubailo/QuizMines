@@ -7,10 +7,10 @@ import time
 WIDTH=10
 HEIGHT=10
 NUM_MINES=20
-NUM_PPL=1
+NUM_PPL=5
 
 app = Flask(__name__)
-bears = [(0, "Baby Hugs Bear"), (1, "Birthday Bear")]#, (2,"Cheer Bear")]#, (3,"Friend Bear")], (4,"Funshine Bear")]
+bears = [(0, "Baby Hugs Bear"), (1, "Birthday Bear"), (2,"Cheer Bear"), (3,"Friend Bear"), (4,"Funshine Bear")]
 questions = []
 answer = ""
 curQuestionIndex = -1
@@ -207,20 +207,24 @@ def mine_server():
                     hitMine = False
 	            del questions[curQuestionIndex]
                     del response['question']
+	            for (key, (b, index_2, n_msgs))  in ips.items() :
+                        n_msgs.append(("System", (new_bear + " has answered the question")))
+            if hitMine:	
+	        for (key, (b, index_2, n_msgs))  in ips.items() :
+                    n_msgs.append(("System", (new_bear + " has answered the question incorrectly")))	
         if request.args.has_key('switch') and len(questions) > 1:
             new_question_num = randint(0, len(questions)-1)
             while (new_question_num == curQuestionIndex) :
                 new_question_num = randint(0, len(questions)-1)
             del response['question']
+            curQuestionIndex = new_question_num
             (new_trivia, new_trivia_ans) = questions[new_question_num]
 	    for (key, (b, index_2, n_msgs))  in ips.items() :
                 n_msgs.append(("System", (new_bear + " has just changed the question")))	
             response['question'] = new_trivia
             answer = new_trivia_ans
     if checkWin():
-        response['win'] = "shire"
-    print (new_bear + " has msg list: ")
-    print msg
+        response['win'] = "was intern"
     response['messages'] = msg
     ips[new_ip] = (new_bear, new_index, [])
     handle_connected(new_bear, new_index, new_ip)

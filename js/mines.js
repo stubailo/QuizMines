@@ -3,7 +3,7 @@
   var end_question_time, flag, init_chat, init_ip_form, log_messages, move, question_time, render_board, server_url, start_update_clock, update, update_buddy_list, update_url, update_view, win,
     _this = this;
 
-  server_url = "http://10.156.25.239:5000";
+  server_url = "http://10.156.25.207:5000";
 
   start_update_clock = function() {
     return setInterval(update, 3000);
