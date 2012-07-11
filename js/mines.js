@@ -200,7 +200,7 @@
         data: {
           answer: $("#question_dialog input[type=text]").val()
         },
-        success: update
+        success: update_view
       });
       return false;
     });

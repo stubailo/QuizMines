@@ -164,7 +164,7 @@ $ ->
       url: server_url
       data:
         answer: $("#question_dialog input[type=text]").val()
-      success: update
+      success: update_view
     return false
   check_for_too_many_players_and_start = (response) ->
     console.log response
