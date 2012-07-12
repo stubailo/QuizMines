@@ -1,20 +1,20 @@
-First Hedgehog;Andy Aymeloglu
-Bobblehead  Kidnapper Victim;Jared Miller
-T-shirt Designer;John Joh
-Created a Mandelbrot Plot using Hedgehog;Rico Chiu
-Spent 1 month inside;Bradley Yoo
-First QA on HH;Anthony Mui
+First Hedgehog;Andy Aymeloglu, andy, 
+Bobblehead  Kidnapper Victim;Jared Miller, jared
+T-shirt Designer;John Joh, tony, anthony, bd, bill, john
+Created a Mandelbrot Plot using Hedgehog;Rico Chiu, rico
+Spent 1 month inside;Bradley Yoo, bradley, brads, brad$, nightmare moon
+First QA on HH;Anthony Mui, tony
 One of the 3 Tallest Hedgehogs;Keith, Tristan, Karl
-First Hedgehog in 2009;Akshay Pundle
-The face of 2012 Valentine’s Day;Kevin Simler
-2011 Hedgehog FIFA Champ;Hari Arul
-Featured on a CareBear Shirt;Graham Peace
+First Hedgehog in 2009;Akshay Pundle, akshay, shaq
+The face of 2012 Valentine’s Day;Kevin Simler, kevin
+2011 Hedgehog FIFA Champ;Hari Arul, hari
+Featured on a CareBear Shirt;Graham Peace, graham
 First HH Party at 101F;Cinco de Mayo, Tom de Mayo
 HH chihuaha;Izzy
-Tubing destination;Russian River, American River
+Tubing destination;Russian River, American River, russian, american
 First HH Live-in Party;ShantyTown
 Color of Gentlemen;Pink
-Location of Phosphorus shirts;Patxi's
+Location of Phosphorus shirts;Patxi's, patxis
 First HH building's nickname;Octagon
-How did Paul first break his arm;Arm-wrestling, Andy Aymeloglu
-HH Cricket Match teams;India and Pakistan
+How did Paul first break his arm;Arm-wrestling, Andy Aymeloglu, andy, arm wrestling, armwrestling
+HH Cricket Match teams;India and Pakistan, india pakistan, pakistan india, pakistan and india
